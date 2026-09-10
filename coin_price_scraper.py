@@ -1,22 +1,32 @@
+#!/usr/bin/env python3
 import requests
-import json
 
-def get_crypto_price(symbol, exchange):
-    url = f'https://api.example.com/v1/price?symbol={symbol}&exchange={exchange}'
+
+BASE_URL = 'https://api.coinpaprika.com/v1'
+
+
+def get_crypto_price(symbol: str, exchange: str) -> float:
+    url = f'{BASE_URL}/ticker/{symbol}/ohlcv?interval=daily&exchange={exchange}'
     response = requests.get(url)
     data = response.json()
-    if 'price' in data:
+    if data and 'price' in data:
         price = data['price']
     else:
-        print('Price key not found, using fallback method.')
-        price = 'N/A'
+        price = None
     return price
 
+
 def main():
-    symbol = 'BTC'
-    exchange = 'Coinbase'
+    symbol = 'btc-bitcoin'  # Symbol for BTC
+    exchange = 'Coinbase'  # Exchange name
+
+    print(f'Fetching the price of {symbol} on {exchange}...')
     price = get_crypto_price(symbol, exchange)
-    print(f'The price of {symbol} on {exchange} is: {price}')
+    if price is not None:
+        print(f'Price: {price}')
+    else:
+        print(f'Failed to fetch the price of {symbol} on {exchange}.')
+
 
 if __name__ == '__main__':
     main()
