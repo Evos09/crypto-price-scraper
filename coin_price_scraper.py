@@ -1,5 +1,7 @@
 #!/usr/bin/env python3
 import requests
+import csv
+import datetime
 
 
 BASE_URL = 'https://api.coinpaprika.com/v1'
@@ -24,6 +26,10 @@ def main():
     price = get_crypto_price(symbol, exchange)
     if price is not None:
         print(f'Price: {price}')
+        # Save to CSV
+        with open('crypto_prices.csv', 'a', newline='') as file:
+            writer = csv.writer(file)
+            writer.writerow([datetime.datetime.now(), symbol, exchange, price])
     else:
         print(f'Failed to fetch the price of {symbol} on {exchange}.')
 
